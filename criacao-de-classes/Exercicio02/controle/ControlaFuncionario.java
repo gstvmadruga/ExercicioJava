@@ -1,4 +1,4 @@
-package gerenciafuncionario;
+package controle;
 
 import dominio.Funcionario;
 import java.util.Scanner;
