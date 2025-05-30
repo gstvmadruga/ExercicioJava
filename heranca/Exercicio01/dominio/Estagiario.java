@@ -1,4 +1,4 @@
-package Exercicios01.heranca1.dominio;
+package dominio;
 
 public class Estagiario extends Funcionario{
     public Estagiario(String nome, double salarioBase){
