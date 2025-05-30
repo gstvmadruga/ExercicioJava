@@ -1,6 +1,6 @@
-package Exercicios01.heranca1.controle;
+package controle;
 
-import Exercicios01.heranca1.dominio.*;
+import dominio.*;
 
 public class ControlaFuncionario {
     public static void main(String[] args) {
