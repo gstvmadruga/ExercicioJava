@@ -1,4 +1,4 @@
-package VerificaParImpar;
+package verificaparimpar;
 
 import java.util.Scanner;
 
