@@ -1,4 +1,4 @@
-package contabancaria;
+package controle;
 
 import dominio.ContaBancaria;
 import java.util.Scanner;
