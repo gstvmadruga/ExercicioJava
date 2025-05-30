@@ -1,4 +1,4 @@
-package contabancaria;
+package dominio;
 
 public class ContaBancaria {
     private String titular;
