@@ -1,4 +1,4 @@
-package Exercicios01.heranca1.dominio;
+package dominio;
 
 public class Gerente extends Funcionario{
 
