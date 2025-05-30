@@ -11,15 +11,12 @@ public class VerificaAnoBissexto {
 
         boolean bissexto = false;
 
-        // Critério 1: Divisível por 4
         if (ano % 4 == 0) {
-            // Critério 2: Se divisível por 100, também deve ser por 400
             if (ano % 100 == 0) {
                 if (ano % 400 == 0) {
                     bissexto = true;
                 }
             } else {
-                // Se não for divisível por 100, mas é por 4, é bissexto
                 bissexto = true;
             }
         }
