@@ -1,4 +1,4 @@
-package ClassificaIdade;
+package classificaidade;
 
 import java.util.Scanner;
 
