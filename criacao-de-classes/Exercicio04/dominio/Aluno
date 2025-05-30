@@ -1,0 +1,40 @@
+package dominio;
+
+public class Aluno {
+    private String nome;
+    private double nota;
+
+    public Aluno(String nome) {
+        this.nome = nome;
+        this.nota = -1.0; 
+    }
+    public void setNota(double nota) {
+        this.nota = nota;
+    }
+
+    public boolean validarNota() {
+        return this.nota >= 0 && this.nota <= 10;
+    }
+
+    public String classificarAluno() {
+        if (!validarNota()) {
+            return "Nota inválida. Não é possível classificar.";
+        }
+
+        if (this.nota >= 7) {
+            return "Aprovado";
+        } else if (this.nota >= 5) {
+            return "Recuperação";
+        } else {
+            return "Reprovado";
+        }
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public double getNota() {
+        return nota;
+    }
+}
