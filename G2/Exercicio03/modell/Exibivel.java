@@ -1,5 +1,6 @@
 package model;
 
 public interface Exibivel {
-    String exibirDados();
+    void exibir();
 }
+
