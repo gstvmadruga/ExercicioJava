@@ -1,40 +1,23 @@
 package model;
 
 public class Temporario extends Funcionario {
-    private double valorHora;
-    private int horasTrabalhadas;
+    private int diasContrato;
 
-    public Temporario(String nome, int matricula, double valorHora, int horasTrabalhadas) {
+    public Temporario(String nome, String matricula, int diasContrato) {
         super(nome, matricula);
-        this.valorHora = valorHora;
-        this.horasTrabalhadas = horasTrabalhadas;
+        this.diasContrato = diasContrato;
     }
 
-    public double getValorHora() {
-        return valorHora;
-    }
-
-    public void setValorHora(double valorHora) {
-        this.valorHora = valorHora;
-    }
-
-    public int getHorasTrabalhadas() {
-        return horasTrabalhadas;
-    }
-
-    public void setHorasTrabalhadas(int horasTrabalhadas) {
-        this.horasTrabalhadas = horasTrabalhadas;
+    public int getDiasContrato() {
+        return diasContrato;
     }
 
     @Override
-    public double calcularSalario() {
-        return valorHora * horasTrabalhadas;
-    }
-
-    @Override
-    public void exibir() {
-        System.out.println("Funcionário Temporário:");
-        super.exibir();
+    public void exibirInformacoes() {
+        System.out.println("Tipo: Temporário");
+        System.out.println("Nome: " + getNome());
+        System.out.println("Matrícula: " + getMatricula());
+        System.out.println("Dias de Contrato: " + diasContrato);
     }
 }
 
