@@ -1,30 +1,24 @@
 package model;
 
 public class Terceirizado extends Funcionario {
-    private double valorContrato;
+    private String empresaTerceirizada;
 
-    public Terceirizado(String nome, int matricula, double valorContrato) {
+    public Terceirizado(String nome, String matricula, String empresaTerceirizada) {
         super(nome, matricula);
-        this.valorContrato = valorContrato;
+        this.empresaTerceirizada = empresaTerceirizada;
     }
 
-    public double getValorContrato() {
-        return valorContrato;
-    }
-
-    public void setValorContrato(double valorContrato) {
-        this.valorContrato = valorContrato;
+    public String getEmpresaTerceirizada() {
+        return empresaTerceirizada;
     }
 
     @Override
-    public double calcularSalario() {
-        return valorContrato;
-    }
-
-    @Override
-    public void exibir() {
-        System.out.println("Funcionário Terceirizado:");
-        super.exibir();
+    public void exibirInformacoes() {
+        System.out.println("Tipo: Terceirizado");
+        System.out.println("Nome: " + getNome());
+        System.out.println("Matrícula: " + getMatricula());
+        System.out.println("Empresa Terceirizada: " + empresaTerceirizada);
     }
 }
+
 
