@@ -1,10 +1,10 @@
 package model;
 
-public abstract class Funcionario implements Exibivel {
-    protected String nome;
-    protected int matricula;
+public abstract class Funcionario {
+    private String nome;
+    private String matricula;
 
-    public Funcionario(String nome, int matricula) {
+    public Funcionario(String nome, String matricula) {
         this.nome = nome;
         this.matricula = matricula;
     }
@@ -13,24 +13,10 @@ public abstract class Funcionario implements Exibivel {
         return nome;
     }
 
-    public int getMatricula() {
+    public String getMatricula() {
         return matricula;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setMatricula(int matricula) {
-        this.matricula = matricula;
-    }
-
-    public abstract double calcularSalario();
-
-    @Override
-    public void exibir() {
-        System.out.println("Nome: " + nome);
-        System.out.println("Matrícula: " + matricula);
-        System.out.println("Salário: R$ " + calcularSalario());
-    }
+    public abstract void exibirInformacoes();
 }
+
