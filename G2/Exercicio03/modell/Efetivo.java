@@ -1,30 +1,30 @@
 package model;
 
 public class Efetivo extends Funcionario {
-    private double salarioBase;
+    private double salario;
+    private String cargo;
 
-    public Efetivo(String nome, int matricula, double salarioBase) {
+    public Efetivo(String nome, String matricula, double salario, String cargo) {
         super(nome, matricula);
-        this.salarioBase = salarioBase;
+        this.salario = salario;
+        this.cargo = cargo;
     }
 
-    public double getSalarioBase() {
-        return salarioBase;
+    public double getSalario() {
+        return salario;
     }
 
-    public void setSalarioBase(double salarioBase) {
-        this.salarioBase = salarioBase;
-    }
-
-    @Override
-    public double calcularSalario() {
-        return salarioBase;
+    public String getCargo() {
+        return cargo;
     }
 
     @Override
-    public void exibir() {
-        System.out.println("Funcionário Efetivo:");
-        super.exibir();
+    public void exibirInformacoes() {
+        System.out.println("Tipo: Efetivo");
+        System.out.println("Nome: " + getNome());
+        System.out.println("Matrícula: " + getMatricula());
+        System.out.println("Salário: " + salario);
+        System.out.println("Cargo: " + cargo);
     }
 }
 
