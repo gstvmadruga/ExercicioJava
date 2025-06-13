@@ -8,57 +8,81 @@ public class FuncionarioController {
     private List<Funcionario> funcionarios;
 
     public FuncionarioController() {
-        funcionarios = new ArrayList<>();
+        this.funcionarios = new ArrayList<>();
     }
 
-    public void adicionarFuncionario(Funcionario f) throws EntradaInvalidaException {
-        if (f == null || f.getNome() == null || f.getNome().isEmpty() || f.getMatricula() <= 0) {
-            throw new EntradaInvalidaException("Dados inválidos para o funcionário.");
+    public void cadastrarFuncionario(Funcionario funcionario) throws EntradaInvalidaException {
+        if (funcionario == null) {
+            throw new EntradaInvalidaException("Funcionário não pode ser nulo.");
         }
-        funcionarios.add(f);
+        // Validação de matrícula única
+        for (Funcionario f : funcionarios) {
+            if (f.getMatricula().equals(funcionario.getMatricula())) {
+                throw new EntradaInvalidaException("Matrícula já existente.");
+            }
+        }
+        this.funcionarios.add(funcionario);
+        System.out.println("Funcionário cadastrado com sucesso!");
     }
 
     public List<Funcionario> listarFuncionarios() {
-        return funcionarios;
+        return new ArrayList<>(this.funcionarios);
     }
 
-    public Funcionario buscarPorMatricula(int matricula) throws FuncionarioNaoEncontradoException {
-        return funcionarios.stream()
-                .filter(f -> f.getMatricula() == matricula)
-                .findFirst()
-                .orElseThrow(() -> new FuncionarioNaoEncontradoException("Funcionário com matrícula " + matricula + " não encontrado."));
-    }
-
-    public List<Funcionario> buscarPorNome(String nome) {
-        List<Funcionario> encontrados = new ArrayList<>();
+    public Funcionario buscarFuncionario(String termoBusca) throws FuncionarioNaoEncontradoException {
         for (Funcionario f : funcionarios) {
-            if (f.getNome().toLowerCase().contains(nome.toLowerCase())) {
-                encontrados.add(f);
+            if (f.getNome().equalsIgnoreCase(termoBusca) || f.getMatricula().equals(termoBusca)) {
+                return f;
             }
         }
-        return encontrados;
+        throw new FuncionarioNaoEncontradoException("Funcionário não encontrado: " + termoBusca);
     }
 
-    public void atualizarFuncionario(int matricula, Funcionario novoFuncionario) throws FuncionarioNaoEncontradoException, EntradaInvalidaException {
-        Funcionario antigo = buscarPorMatricula(matricula);
-        if (novoFuncionario == null || novoFuncionario.getNome() == null || novoFuncionario.getNome().isEmpty()) {
-            throw new EntradaInvalidaException("Dados inválidos para atualização.");
+    public void atualizarFuncionario(String matricula, Funcionario funcionarioAtualizado) throws FuncionarioNaoEncontradoException, EntradaInvalidaException {
+        Funcionario funcionarioExistente = null;
+        int index = -1;
+        for (int i = 0; i < funcionarios.size(); i++) {
+            if (funcionarios.get(i).getMatricula().equals(matricula)) {
+                funcionarioExistente = funcionarios.get(i);
+                index = i;
+                break;
+            }
         }
-        antigo.setNome(novoFuncionario.getNome());
-        antigo.setMatricula(novoFuncionario.getMatricula());
-        if (antigo instanceof Efetivo && novoFuncionario instanceof Efetivo) {
-            ((Efetivo) antigo).setSalarioBase(((Efetivo) novoFuncionario).getSalarioBase());
-        } else if (antigo instanceof Temporario && novoFuncionario instanceof Temporario) {
-            ((Temporario) antigo).setValorHora(((Temporario) novoFuncionario).getValorHora());
-            ((Temporario) antigo).setHorasTrabalhadas(((Temporario) novoFuncionario).getHorasTrabalhadas());
-        } else if (antigo instanceof Terceirizado && novoFuncionario instanceof Terceirizado) {
-            ((Terceirizado) antigo).setValorContrato(((Terceirizado) novoFuncionario).getValorContrato());
+
+        if (funcionarioExistente == null) {
+            throw new FuncionarioNaoEncontradoException("Funcionário com matrícula " + matricula + " não encontrado para atualização.");
         }
+
+        if (funcionarioAtualizado == null) {
+            throw new EntradaInvalidaException("Dados do funcionário atualizado não podem ser nulos.");
+        }
+
+        // Validação para garantir que a matrícula não seja alterada para uma já existente (exceto a própria)
+        for (Funcionario f : funcionarios) {
+            if (!f.getMatricula().equals(matricula) && f.getMatricula().equals(funcionarioAtualizado.getMatricula())) {
+                throw new EntradaInvalidaException("Nova matrícula já existente para outro funcionário.");
+            }
+        }
+
+        this.funcionarios.set(index, funcionarioAtualizado);
+        System.out.println("Funcionário atualizado com sucesso!");
     }
 
-    public void removerFuncionario(int matricula) throws FuncionarioNaoEncontradoException {
-        Funcionario f = buscarPorMatricula(matricula);
-        funcionarios.remove(f);
+    public void removerFuncionario(String matricula) throws FuncionarioNaoEncontradoException {
+        Funcionario funcionarioParaRemover = null;
+        for (Funcionario f : funcionarios) {
+            if (f.getMatricula().equals(matricula)) {
+                funcionarioParaRemover = f;
+                break;
+            }
+        }
+
+        if (funcionarioParaRemover == null) {
+            throw new FuncionarioNaoEncontradoException("Funcionário com matrícula " + matricula + " não encontrado para remoção.");
+        }
+
+        this.funcionarios.remove(funcionarioParaRemover);
+        System.out.println("Funcionário removido com sucesso!");
     }
 }
 
