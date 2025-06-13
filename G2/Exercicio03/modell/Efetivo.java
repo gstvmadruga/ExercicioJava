@@ -1,4 +1,4 @@
-package model;
+package modell;
 
 public class Efetivo extends Funcionario {
     private double salario;
