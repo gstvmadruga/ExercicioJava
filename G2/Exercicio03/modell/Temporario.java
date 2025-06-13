@@ -1,4 +1,4 @@
-package model;
+package modell;
 
 public class Temporario extends Funcionario {
     private int diasContrato;
