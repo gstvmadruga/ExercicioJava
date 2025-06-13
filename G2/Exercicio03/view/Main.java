@@ -11,169 +11,192 @@ public class Principal {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        boolean sair = false;
-        while (!sair) {
-            mostrarMenu();
-            int opcao = lerInt("Escolha uma opção: ");
-            try {
-                switch (opcao) {
-                    case 1 -> cadastrarFuncionario();
-                    case 2 -> listarFuncionarios();
-                    case 3 -> buscarFuncionario();
-                    case 4 -> atualizarFuncionario();
-                    case 5 -> removerFuncionario();
-                    case 6 -> sair = true;
-                    default -> System.out.println("Opção inválida!");
-                }
-            } catch (EntradaInvalidaException | FuncionarioNaoEncontradoException e) {
-                System.out.println("Erro: " + e.getMessage());
+        int opcao;
+        do {
+            exibirMenu();
+            opcao = scanner.nextInt();
+            scanner.nextLine(); 
+
+            switch (opcao) {
+                case 1:
+                    cadastrarFuncionario();
+                    break;
+                case 2:
+                    listarFuncionarios();
+                    break;
+                case 3:
+                    buscarFuncionario();
+                    break;
+                case 4:
+                    atualizarFuncionario();
+                    break;
+                case 5:
+                    removerFuncionario();
+                    break;
+                case 0:
+                    System.out.println("Saindo do sistema...");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
             }
-            System.out.println();
-        }
-        System.out.println("Sistema finalizado.");
+            System.out.println(); 
+        } while (opcao != 0);
+
+        scanner.close();
     }
 
-    private static void mostrarMenu() {
-        System.out.println("=== Sistema de Cadastro de Funcionários ===");
-        System.out.println("1. Cadastrar funcionário");
-        System.out.println("2. Listar todos os funcionários");
-        System.out.println("3. Buscar funcionário");
-        System.out.println("4. Atualizar funcionário");
-        System.out.println("5. Remover funcionário");
-        System.out.println("6. Sair");
+    private static void exibirMenu() {
+        System.out.println("---- Sistema de Cadastro de Funcionários ----");
+        System.out.println("1. Cadastrar Funcionário");
+        System.out.println("2. Listar Funcionários");
+        System.out.println("3. Buscar Funcionário");
+        System.out.println("4. Atualizar Funcionário");
+        System.out.println("5. Remover Funcionário");
+        System.out.println("0. Sair");
+        System.out.print("Escolha uma opção: ");
     }
 
-    private static void cadastrarFuncionario() throws EntradaInvalidaException {
-        System.out.println("Tipo de funcionário:");
+    private static void cadastrarFuncionario() {
+        System.out.println("\n---- Cadastro de Funcionário ----");
+        System.out.print("Nome: ");
+        String nome = scanner.nextLine();
+        System.out.print("Matrícula: ");
+        String matricula = scanner.nextLine();
+
+        System.out.println("Tipo de Funcionário:");
         System.out.println("1. Efetivo");
         System.out.println("2. Temporário");
         System.out.println("3. Terceirizado");
-        int tipo = lerInt("Escolha o tipo: ");
+        System.out.print("Escolha o tipo: ");
+        int tipo = scanner.nextInt();
+        scanner.nextLine(); 
 
-        String nome = lerString("Nome: ");
-        int matricula = lerInt("Matrícula: ");
-
-        switch (tipo) {
-            case 1 -> {
-                double salarioBase = lerDouble("Salário base: ");
-                Efetivo e = new Efetivo(nome, matricula, salarioBase);
-                controller.adicionarFuncionario(e);
-                System.out.println("Funcionário efetivo cadastrado com sucesso!");
+        Funcionario novoFuncionario = null;
+        try {
+            switch (tipo) {
+                case 1:
+                    System.out.print("Salário: ");
+                    double salario = scanner.nextDouble();
+                    scanner.nextLine();
+                    System.out.print("Cargo: ");
+                    String cargo = scanner.nextLine();
+                    novoFuncionario = new Efetivo(nome, matricula, salario, cargo);
+                    break;
+                case 2:
+                    System.out.print("Dias de Contrato: ");
+                    int diasContrato = scanner.nextInt();
+                    scanner.nextLine();
+                    novoFuncionario = new Temporario(nome, matricula, diasContrato);
+                    break;
+                case 3:
+                    System.out.print("Empresa Terceirizada: ");
+                    String empresaTerceirizada = scanner.nextLine();
+                    novoFuncionario = new Terceirizado(nome, matricula, empresaTerceirizada);
+                    break;
+                default:
+                    System.out.println("Tipo de funcionário inválido.");
+                    return;
             }
-            case 2 -> {
-                double valorHora = lerDouble("Valor por hora: ");
-                int horasTrabalhadas = lerInt("Horas trabalhadas: ");
-                Temporario t = new Temporario(nome, matricula, valorHora, horasTrabalhadas);
-                controller.adicionarFuncionario(t);
-                System.out.println("Funcionário temporário cadastrado com sucesso!");
-            }
-            case 3 -> {
-                double valorContrato = lerDouble("Valor do contrato: ");
-                Terceirizado terceirizado = new Terceirizado(nome, matricula, valorContrato);
-                controller.adicionarFuncionario(terceirizado);
-                System.out.println("Funcionário terceirizado cadastrado com sucesso!");
-            }
-            default -> System.out.println("Tipo inválido!");
+            controller.cadastrarFuncionario(novoFuncionario);
+        } catch (EntradaInvalidaException e) {
+            System.err.println("Erro ao cadastrar: " + e.getMessage());
+        } catch (java.util.InputMismatchException e) {
+            System.err.println("Erro de entrada: Valor inválido para o tipo de dado esperado.");
+            scanner.nextLine(); 
         }
     }
 
     private static void listarFuncionarios() {
-        List<Funcionario> lista = controller.listarFuncionarios();
-        if (lista.isEmpty()) {
+        System.out.println("\n---- Lista de Funcionários ----");
+        List<Funcionario> funcionarios = controller.listarFuncionarios();
+        if (funcionarios.isEmpty()) {
             System.out.println("Nenhum funcionário cadastrado.");
         } else {
-            for (Funcionario f : lista) {
-                System.out.println("----------------------------");
-                f.exibir();
-            }
-            System.out.println("----------------------------");
-        }
-    }
-
-    private static void buscarFuncionario() throws FuncionarioNaoEncontradoException {
-        System.out.println("Buscar por:");
-        System.out.println("1. Matrícula");
-        System.out.println("2. Nome");
-        int opcao = lerInt("Opção: ");
-        if (opcao == 1) {
-            int matricula = lerInt("Digite a matrícula: ");
-            Funcionario f = controller.buscarPorMatricula(matricula);
-            f.exibir();
-        } else if (opcao == 2) {
-            String nome = lerString("Digite o nome ou parte do nome: ");
-            List<Funcionario> encontrados = controller.buscarPorNome(nome);
-            if (encontrados.isEmpty()) {
-                System.out.println("Nenhum funcionário encontrado com esse nome.");
-            } else {
-                for (Funcionario f : encontrados) {
-                    System.out.println("----------------------------");
-                    f.exibir();
-                }
-                System.out.println("----------------------------");
-            }
-        } else {
-            System.out.println("Opção inválida.");
-        }
-    }
-
-    private static void atualizarFuncionario() throws FuncionarioNaoEncontradoException, EntradaInvalidaException {
-        int matricula = lerInt("Digite a matrícula do funcionário a ser atualizado: ");
-        Funcionario antigo = controller.buscarPorMatricula(matricula);
-        System.out.println("Dados atuais:");
-        antigo.exibir();
-
-        System.out.println("Digite os novos dados:");
-        String nome = lerString("Novo nome: ");
-        int novaMatricula = lerInt("Nova matrícula: ");
-
-        if (antigo instanceof Efetivo) {
-            double salarioBase = lerDouble("Novo salário base: ");
-            Efetivo novo = new Efetivo(nome, novaMatricula, salarioBase);
-            controller.atualizarFuncionario(matricula, novo);
-        } else if (antigo instanceof Temporario) {
-            double valorHora = lerDouble("Novo valor por hora: ");
-            int horasTrabalhadas = lerInt("Nova quantidade de horas trabalhadas: ");
-            Temporario novo = new Temporario(nome, novaMatricula, valorHora, horasTrabalhadas);
-            controller.atualizarFuncionario(matricula, novo);
-        } else if (antigo instanceof Terceirizado) {
-            double valorContrato = lerDouble("Novo valor do contrato: ");
-            Terceirizado novo = new Terceirizado(nome, novaMatricula, valorContrato);
-            controller.atualizarFuncionario(matricula, novo);
-        }
-        System.out.println("Funcionário atualizado com sucesso!");
-    }
-
-    private static void removerFuncionario() throws FuncionarioNaoEncontradoException {
-        int matricula = lerInt("Digite a matrícula do funcionário a ser removido: ");
-        controller.removerFuncionario(matricula);
-        System.out.println("Funcionário removido com sucesso!");
-    }
-
-    private static String lerString(String msg) {
-        System.out.print(msg);
-        return scanner.nextLine();
-    }
-
-    private static int lerInt(String msg) {
-        while (true) {
-            try {
-                System.out.print(msg);
-                return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida, digite um número inteiro.");
+            for (Funcionario f : funcionarios) {
+                f.exibirInformacoes();
+                System.out.println("--------------------");
             }
         }
     }
 
-    private static double lerDouble(String msg) {
-        while (true) {
-            try {
-                System.out.print(msg);
-                return Double.parseDouble(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida, digite um número decimal válido.");
+    private static void buscarFuncionario() {
+        System.out.println("\n---- Buscar Funcionário ----");
+        System.out.print("Digite o nome ou matrícula do funcionário: ");
+        String termoBusca = scanner.nextLine();
+
+        try {
+            Funcionario funcionarioEncontrado = controller.buscarFuncionario(termoBusca);
+            System.out.println("Funcionário encontrado:");
+            funcionarioEncontrado.exibirInformacoes();
+        } catch (FuncionarioNaoEncontradoException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private static void atualizarFuncionario() {
+        System.out.println("\n---- Atualizar Funcionário ----");
+        System.out.print("Digite a matrícula do funcionário a ser atualizado: ");
+        String matriculaAntiga = scanner.nextLine();
+
+        try {
+            controller.buscarFuncionario(matriculaAntiga);
+
+            System.out.println("Digite os novos dados do funcionário:");
+            System.out.print("Novo Nome: ");
+            String novoNome = scanner.nextLine();
+            System.out.print("Nova Matrícula: ");
+            String novaMatricula = scanner.nextLine();
+
+            System.out.println("Tipo de Funcionário (1. Efetivo, 2. Temporário, 3. Terceirizado): ");
+            System.out.print("Escolha o tipo: ");
+            int tipo = scanner.nextInt();
+            scanner.nextLine(); 
+
+            Funcionario funcionarioAtualizado = null;
+            switch (tipo) {
+                case 1:
+                    System.out.print("Novo Salário: ");
+                    double novoSalario = scanner.nextDouble();
+                    scanner.nextLine();
+                    System.out.print("Novo Cargo: ");
+                    String novoCargo = scanner.nextLine();
+                    funcionarioAtualizado = new Efetivo(novoNome, novaMatricula, novoSalario, novoCargo);
+                    break;
+                case 2:
+                    System.out.print("Novos Dias de Contrato: ");
+                    int novosDiasContrato = scanner.nextInt();
+                    scanner.nextLine();
+                    funcionarioAtualizado = new Temporario(novoNome, novaMatricula, novosDiasContrato);
+                    break;
+                case 3:
+                    System.out.print("Nova Empresa Terceirizada: ");
+                    String novaEmpresaTerceirizada = scanner.nextLine();
+                    funcionarioAtualizado = new Terceirizado(novoNome, novaMatricula, novaEmpresaTerceirizada);
+                    break;
+                default:
+                    System.out.println("Tipo de funcionário inválido.");
+                    return;
             }
+            controller.atualizarFuncionario(matriculaAntiga, funcionarioAtualizado);
+        } catch (FuncionarioNaoEncontradoException e) {
+            System.err.println(e.getMessage());
+        } catch (EntradaInvalidaException e) {
+            System.err.println("Erro ao atualizar: " + e.getMessage());
+        } catch (java.util.InputMismatchException e) {
+            System.err.println("Erro de entrada: Valor inválido para o tipo de dado esperado.");
+            scanner.nextLine(); 
+        }
+    }
+
+    private static void removerFuncionario() {
+        System.out.println("\n---- Remover Funcionário ----");
+        System.out.print("Digite a matrícula do funcionário a ser removido: ");
+        String matricula = scanner.nextLine();
+
+        try {
+            controller.removerFuncionario(matricula);
+        } catch (FuncionarioNaoEncontradoException e) {
+            System.err.println(e.getMessage());
         }
     }
 }
-
