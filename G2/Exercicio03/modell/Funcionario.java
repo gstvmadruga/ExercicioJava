@@ -1,4 +1,4 @@
-package model;
+package modell;
 
 public abstract class Funcionario {
     private String nome;
