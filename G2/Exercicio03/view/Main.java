@@ -1,7 +1,7 @@
 package view;
 
 import controller.FuncionarioController;
-import model.*;
+import modell.*;
 
 import java.util.List;
 import java.util.Scanner;
