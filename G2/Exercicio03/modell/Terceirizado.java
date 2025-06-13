@@ -1,4 +1,4 @@
-package model;
+package modell;
 
 public class Terceirizado extends Funcionario {
     private String empresaTerceirizada;
